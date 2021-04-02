@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React  from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
+import { useAppSelector } from './app/hooks';
+import CustomNavbar from './components/CustomNavbar';
+import { Footer } from './components/Footer';
+import HistoryList from './components/History';
+import { Loading } from './components/Loading';
+import { UserData } from './components/UserData';
 
-function App() {
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`
+
+const App = () => {
+  const { user, loading } = useAppSelector(state => state.search)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <StyledDiv>
+        <CustomNavbar />
+        <Switch>
+          <Route exact path="/">
+            {loading ? <Loading /> : user ? <UserData user={user} /> : null}
+          </Route>
+          <Route path="/history">
+            <HistoryList />
+          </Route>
+        </Switch>
+        <Footer />
+      </StyledDiv>
+    </Router>
   );
 }
 
